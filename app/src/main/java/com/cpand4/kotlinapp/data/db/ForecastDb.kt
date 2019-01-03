@@ -1,11 +1,9 @@
 package com.cpand4.kotlinapp.data.db
 
 import com.cpand4.kotlinapp.domain.datasource.ForecastDataSource
+import com.cpand4.kotlinapp.domain.model.Forecast
 import com.cpand4.kotlinapp.domain.model.ForecastList
-import com.cpand4.kotlinapp.extensions.clear
-import com.cpand4.kotlinapp.extensions.parseList
-import com.cpand4.kotlinapp.extensions.parseOpt
-import com.cpand4.kotlinapp.extensions.toVarargArray
+import com.cpand4.kotlinapp.extensions.*
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 
@@ -17,8 +15,8 @@ class ForecastDb(private val forecastDbHelper: ForecastDbHelper = ForecastDbHelp
                  private val dataMapper: DbDataMapper = DbDataMapper()): ForecastDataSource {
 
     override fun requestForecastByZipCode(zipCode: Long, date: Long) = forecastDbHelper.use {
-        val dailyRequest = "${DayForecastTable.CITY_ID} = {id} AND ${DayForecastTable.DATE} >= {date}"
 
+        val dailyRequest = "${DayForecastTable.CITY_ID} = ? AND ${DayForecastTable.DATE} >= ?"
         val dailyForecast = select(DayForecastTable.NAME)
             .whereSimple(dailyRequest, zipCode.toString(), date.toString())
             .parseList { DayForecast(HashMap(it)) }
@@ -28,6 +26,13 @@ class ForecastDb(private val forecastDbHelper: ForecastDbHelper = ForecastDbHelp
             .parseOpt { CityForecast(HashMap(it), dailyForecast) }
 
         if(city != null) dataMapper.convertToDomain(city) else null
+    }
+
+    override fun requestDayForecast(id: Long): Forecast? = forecastDbHelper.use {
+        val forecast = select(DayForecastTable.NAME).byId(id)
+            .parseOpt { DayForecast(HashMap(it)) }
+
+        if (forecast != null) dataMapper.convertDayToDomain(forecast) else null
     }
 
     fun saveForecast(forecast: ForecastList) = forecastDbHelper.use {

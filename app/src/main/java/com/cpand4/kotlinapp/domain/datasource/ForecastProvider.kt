@@ -2,6 +2,7 @@ package com.cpand4.kotlinapp.domain.datasource
 
 import com.cpand4.kotlinapp.data.db.ForecastDb
 import com.cpand4.kotlinapp.data.server.ForecastServer
+import com.cpand4.kotlinapp.domain.model.Forecast
 import com.cpand4.kotlinapp.domain.model.ForecastList
 import com.cpand4.kotlinapp.extensions.firstResult
 
@@ -16,12 +17,16 @@ class ForecastProvider(private val sources: List<ForecastDataSource> = ForecastP
         val SOURCES = listOf(ForecastDb(), ForecastServer())
     }
 
-    fun requestByZipCode(zipCode: Long, days: Int): ForecastList = sources.firstResult { requestSource(it, days, zipCode) }
-
-    fun requestSource(source: ForecastDataSource, days: Int, zipCode: Long): ForecastList? {
-        val res = source.requestForecastByZipCode(zipCode, todayTimeSpan())
-        return if (res != null && res.size >= days) res else null
+    fun requestForecast(id: Long): Forecast = requestToSources {
+        it.requestDayForecast(id)
     }
+
+    fun requestByZipCode(zipCode: Long, days: Int): ForecastList = requestToSources {
+        val res = it.requestForecastByZipCode(zipCode, todayTimeSpan())
+        if (res != null && res.size >= days) res else null
+    }
+
+    private fun <T : Any> requestToSources(f: (ForecastDataSource) -> T?) : T = sources.firstResult { f(it) }
 
     private fun todayTimeSpan() = System.currentTimeMillis() / DAY_IN_MILLIS * DAY_IN_MILLIS
 }

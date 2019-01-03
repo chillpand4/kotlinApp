@@ -8,6 +8,7 @@ import com.cpand4.kotlinapp.R
 import com.cpand4.kotlinapp.domain.model.Forecast
 import com.cpand4.kotlinapp.domain.model.ForecastList
 import com.cpand4.kotlinapp.extensions.ctx
+import com.cpand4.kotlinapp.extensions.toDateString
 import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_forecast.*
@@ -42,17 +43,12 @@ class ForecastListAdapter(private val weekForecast: ForecastList,
         fun bindForecast(forecast: Forecast) {
             with(forecast) {
                 Picasso.get().load(iconUrl).into(itemView.icon)
-                dateText.text = convertDate(date)
+                dateText.text = date.toDateString()
                 descriptionText.text = description
                 maxTemperature.text = "$high"
                 minTemperature.text = "$low"
                 itemView.setOnClickListener{ itemClick(this) }
             }
-        }
-
-        private fun convertDate(date: Long): String {
-            val df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
-            return df.format(date)
         }
     }
 }
