@@ -1,4 +1,4 @@
-package com.cpand4.kotlinapp.ui.utils
+package com.cpand4.kotlinapp.extensions
 
 import kotlin.reflect.KProperty
 

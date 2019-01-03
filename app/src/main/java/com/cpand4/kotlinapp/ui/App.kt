@@ -1,7 +1,7 @@
 package com.cpand4.kotlinapp.ui
 
 import android.app.Application
-import com.cpand4.kotlinapp.ui.utils.DelegatesExt
+import com.cpand4.kotlinapp.extensions.DelegatesExt
 
 /**
  * Created by stefano on 02/01/2019.

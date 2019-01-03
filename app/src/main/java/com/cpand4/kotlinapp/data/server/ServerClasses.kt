@@ -1,7 +1,7 @@
-package com.cpand4.kotlinapp.data
+package com.cpand4.kotlinapp.data.server
 
 /**
- * Created by stefano on 24/12/2018.
+ * Created by stefano on 03/01/2019.
  */
 
 data class ForecastResult(val city: City, val list: List<Forecast>)
@@ -10,9 +10,8 @@ data class City(val id: Long, val name: String, val coord: Coordinates, val coun
 
 data class Coordinates(val lon: Float, val lat: Float)
 
-data class Forecast(val dt: Long, val temp: Temperature, val pressure: Float,
-                    val humidity: Int, val weather: List<Weather>,
-                    val speed: Float, val deg: Int, val clouds: Int, val rain: Float)
+data class Forecast(val dt: Long, val temp: Temperature, val pressure: Float, val humidity: Int,
+                    val weather: List<Weather>, val speed: Float, val deg: Int, val clouds: Int, val rain: Float)
 
 data class Temperature(val day: Float, val min: Float, val max: Float, val night: Float, val eve: Float, val morn: Float)
 
