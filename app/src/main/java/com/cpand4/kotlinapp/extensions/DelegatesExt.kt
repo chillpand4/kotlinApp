@@ -41,6 +41,7 @@ class Preference<T>(private val context: Context,
         putPreference(name, value)
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun findPreference(name: String, default: T): T = with(prefs) {
         val res: Any = when(default) {
             is Long -> getLong(name, default)
